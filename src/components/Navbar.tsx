@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import { Search, Home, User, UserCheck } from "lucide-react";
 import { Badge } from "@mui/material";
 
+import Logo from "../assets/logo192.png";
+
 import { AuthDialog } from "./AuthDialog";
 
 import { useUserContext } from "../providers/UserProvider";
@@ -42,7 +44,7 @@ export const Navbar: React.FC = () => {
         position="sticky"
         elevation={0}
         sx={{
-          backgroundColor: scrolled ? "rgba(255,255,255,0.4)" : "transparent",
+          backgroundColor: scrolled ? "rgba(255,255,255,0.05)" : "transparent",
           backdropFilter: scrolled ? "blur(12px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
           color: "#1D1D1D",
@@ -56,14 +58,25 @@ export const Navbar: React.FC = () => {
               to="/"
               sx={{
                 textDecoration: "none",
-                color: "inherit",
+                color: "#1cb690",
                 fontWeight: 600,
                 fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}
             >
+              <Box
+                component="img"
+                src={Logo}
+                alt="Logo"
+                sx={{
+                  width: { xs: 24, sm: 28, md: 32 },
+                  height: "auto",
+                }}
+              />
               Anywhere Trips
             </Typography>
-
             <Box
               sx={{
                 display: "flex",

@@ -33,6 +33,7 @@ export const Footer: React.FC<FooterProps> = () => {
               sx={{
                 fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
                 fontWeight: 600,
+                color: "#1d1d1d",
               }}
             >
               Anywhere Trips
@@ -41,6 +42,7 @@ export const Footer: React.FC<FooterProps> = () => {
               sx={{
                 fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
                 lineHeight: 1.6,
+                color: "#1d1d1d",
               }}
             >
               Explore. Discover. Repeat. Anywhere Trips makes every trip a story
@@ -53,6 +55,7 @@ export const Footer: React.FC<FooterProps> = () => {
               sx={{
                 fontWeight: 600,
                 fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
+                color: "#1d1d1d",
               }}
             >
               Quick Links
@@ -62,7 +65,7 @@ export const Footer: React.FC<FooterProps> = () => {
               underline="hover"
               sx={{
                 fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
-                color: "inherit",
+                color: "#1d1d1d",
               }}
             >
               Home
@@ -74,6 +77,27 @@ export const Footer: React.FC<FooterProps> = () => {
               sx={{
                 fontWeight: 600,
                 fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
+                color: "#1d1d1d",
+              }}
+            >
+              Contact Us
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
+                color: "#1d1d1d",
+              }}
+            >
+              +91 93621 24857
+            </Typography>
+          </Stack>
+
+          <Stack spacing={1}>
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
+                color: "#1d1d1d",
               }}
             >
               Follow Us
@@ -107,6 +131,7 @@ export const Footer: React.FC<FooterProps> = () => {
           <Typography
             sx={{
               fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" },
+              color: "#1d1d1d",
             }}
           >
             &copy; {new Date().getFullYear()} Anywhere Trips. All rights

@@ -7,6 +7,8 @@ import {
   CardContent,
   CardMedia,
   Skeleton,
+  Avatar,
+  Stack,
 } from "@mui/material";
 import { useUserContext } from "../providers/UserProvider";
 
@@ -19,10 +21,42 @@ interface Package {
   duration: string;
 }
 
+interface Country {
+  id: number;
+  name: string;
+  image: string;
+}
+
 export const Home: React.FC = () => {
   const { user } = useUserContext();
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const countries: Country[] = [
+    {
+      id: 1,
+      name: "Bhutan",
+      image: "https://i.ccdn.sk/acm/fdad64ff66eccbc68042139cd33ea31b.webp",
+    },
+    {
+      id: 2,
+      name: "Nepal",
+      image:
+        "https://www.intrepidtravel.com/adventures/wp-content/uploads/2018/10/Little-Tibet.jpg",
+    },
+    {
+      id: 3,
+      name: "Thailand",
+      image:
+        "https://www.travelandleisure.com/thmb/nDDNqO2EctQhiIfZrxeXTF47zhE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/TAL-koh-phi-phi-PLACESTHAILAND1023-09b9d347b3cd4844b4ae19e4e06a9a6d.jpg",
+    },
+    {
+      id: 4,
+      name: "Japan",
+      image:
+        "https://www.swedishnomad.com/wp-content/images/2017/02/Places-to-visit-in-Japan.jpg",
+    },
+  ];
 
   useEffect(() => {
     setLoading(true);
@@ -30,11 +64,11 @@ export const Home: React.FC = () => {
       setPackages([
         {
           id: 1,
-          title: "Paro & Thimphu Tour",
+          title: "Thimphu & Paro",
           description: "Explore the cultural heart of Bhutan.",
           image:
             "https://www.authenticindiatours.com/app/uploads/2022/04/Rinpung-Dzong-Paro-Bhutan-1400x550-c-default.jpg",
-          price: "₹95,000",
+          price: "₹30,000",
           duration: "4 Nights 5 Days",
         },
         {
@@ -43,7 +77,7 @@ export const Home: React.FC = () => {
           description: "A thrilling hike to the iconic Tiger's Nest Monastery.",
           image:
             "https://assets.cntraveller.in/photos/60be1e1a97b0a0effa438ce6/16:9/w_1024%2Cc_limit/Bhutan-1366x768.jpg",
-          price: "₹72,000",
+          price: "₹24,500",
           duration: "3 Nights 4 Days",
         },
         {
@@ -52,7 +86,7 @@ export const Home: React.FC = () => {
           description: "Experience Bhutan’s beautiful valleys and rivers.",
           image:
             "https://www.rstravels.co.in/images/page/architectural-marvel-of-punakha-dzongs.jpg",
-          price: "₹88,000",
+          price: "₹35,000",
           duration: "4 Nights 5 Days",
         },
         {
@@ -61,7 +95,7 @@ export const Home: React.FC = () => {
           description: "Discover the hidden gems of Eastern Bhutan.",
           image:
             "https://indochinatravel.com/country/bhutan/images/trashigang-valley-view-860.jpg",
-          price: "₹1,02,000",
+          price: "Get a Quote",
           duration: "5 Nights 6 Days",
         },
       ]);
@@ -83,7 +117,7 @@ export const Home: React.FC = () => {
         >
           <Box
             component="img"
-            src="https://media.licdn.com/dms/image/v2/C561BAQHASMAfasFwkA/company-background_10000/company-background_10000/0/1585398383791/sons_of_norway_cover?e=2147483647&v=beta&t=jRcpwR2LbQ5cudoHU85L4hqlyIVriPu2fScsoaXHeD8"
+            src="https://static.cozycozy.com/images/catalog/bg2/horizontal-edinburgh.jpg"
             alt="Hero"
             sx={{
               width: "100%",
@@ -91,7 +125,6 @@ export const Home: React.FC = () => {
               objectFit: "cover",
             }}
           />
-
           <Box
             sx={{
               position: "absolute",
@@ -100,40 +133,155 @@ export const Home: React.FC = () => {
                 "linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6))",
             }}
           />
-
           <Box
             sx={{
               position: "absolute",
               inset: 0,
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
               px: 2,
+              gap: 1,
             }}
           >
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: { xs: "1.5rem", md: "2.1em" },
+                fontSize: { xs: "1.5rem", md: "2.1rem" },
                 fontWeight: 600,
               }}
             >
-              {user?.username ? "Hello " + user?.username : "Hello. Where to next?"}
+              {user?.username
+                ? "Hello " + user?.username
+                : "Hello. Where to next?"}
+            </Typography>
+            <Typography
+              sx={{
+                color: "#fff",
+                fontSize: { xs: "0.9rem", sm: "1", md: "1.1rem" },
+                fontWeight: 400,
+                opacity: 1,
+              }}
+            >
+              Explore. Dream. Discover.
             </Typography>
           </Box>
         </Box>
 
         <Box sx={{ mt: 5 }}>
-          <Typography
+          {loading ? (
+            <Skeleton
+              variant="text"
+              sx={{
+                width: { xs: 150, sm: 200, md: 250 },
+                height: { xs: 30, sm: 35, md: 40 },
+                mb: 2,
+                borderRadius: 1,
+              }}
+            />
+          ) : (
+            <Typography
+              sx={{
+                fontSize: { xs: "1.1rem", md: "1.5rem" },
+                fontWeight: 600,
+                mb: 2,
+              }}
+            >
+              Discover Countries
+            </Typography>
+          )}
+
+          <Box
             sx={{
-              fontSize: { xs: "1.1rem", md: "1.5rem" },
-              fontWeight: 600,
-              mb: 3,
+              display: "grid",
+              gap: 1,
+              gridTemplateColumns: {
+                xs: "repeat(4, 1fr)",
+                sm: "repeat(5, 1fr)",
+                md: "repeat(7, 1fr)",
+              },
             }}
           >
-            Bhutan Packages
-          </Typography>
+            {countries.map((country) => (
+              <Box
+                key={country.id}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: 0.5,
+                }}
+              >
+                {loading ? (
+                  <Box
+                    sx={{
+                      width: { xs: 80, sm: 90, md: 110 },
+                      height: { xs: 80, sm: 90, md: 110 },
+                    }}
+                  >
+                    <Skeleton variant="circular" width="100%" height="100%" />
+                  </Box>
+                ) : (
+                  <Avatar
+                    src={country.image}
+                    alt={country.name}
+                    sx={{
+                      width: { xs: 80, sm: 90, md: 110 },
+                      height: { xs: 80, sm: 90, md: 110 },
+                    }}
+                  />
+                )}
+
+                {loading ? (
+                  <Skeleton
+                    variant="text"
+                    sx={{
+                      width: 60,
+                      height: 20,
+                      mt: 0.5,
+                    }}
+                  />
+                ) : (
+                  <Typography
+                    sx={{
+                      mt: 1,
+                      fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
+                      fontWeight: 500,
+                    }}
+                  >
+                    {country.name}
+                  </Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 5 }}>
+          {loading ? (
+            <Skeleton
+              variant="text"
+              sx={{
+                width: { xs: 150, sm: 200, md: 250 },
+                height: { xs: 30, sm: 35, md: 40 },
+                mb: 2,
+                borderRadius: 1,
+              }}
+            />
+          ) : (
+            <Typography
+              sx={{
+                fontSize: { xs: "1.1rem", md: "1.5rem" },
+                fontWeight: 600,
+                mb: 3,
+              }}
+            >
+              Bhutan Packages
+            </Typography>
+          )}
 
           <Box
             sx={{
@@ -173,13 +321,25 @@ export const Home: React.FC = () => {
                       />
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Typography
-                          sx={{ fontWeight: 600, fontSize: "1rem", mb: 0.5 }}
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: {
+                              xs: "1rem",
+                              sm: "1.1rem",
+                              md: "1.25rem",
+                            },
+                            mb: 0.5,
+                          }}
                         >
                           {pkg.title}
                         </Typography>
                         <Typography
                           sx={{
-                            fontSize: "0.875rem",
+                            fontSize: {
+                              xs: "0.8rem",
+                              sm: "0.85rem",
+                              md: "0.9rem",
+                            },
                             color: "text.secondary",
                             mb: 1,
                           }}
@@ -190,7 +350,11 @@ export const Home: React.FC = () => {
                           sx={{
                             fontWeight: 500,
                             color: "#1cb690",
-                            fontSize: "0.95rem",
+                            fontSize: {
+                              xs: "0.8rem",
+                              sm: "0.85rem",
+                              md: "0.9rem",
+                            },
                           }}
                         >
                           {pkg.price} • {pkg.duration}
