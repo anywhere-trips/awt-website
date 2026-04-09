@@ -81,9 +81,7 @@ export const Home: React.FC = () => {
             durationDays:
               pkg?.duration_days != null ? parseInt(pkg.duration_days) : null,
             location: pkg?.location,
-            thumbnail: pkg?.images?.find(
-              (img: any) => img?.type === "thumbnail",
-            )?.url,
+            image: pkg?.image,
           })),
         );
         setLoading(false);
@@ -336,7 +334,7 @@ export const Home: React.FC = () => {
                         <CardMedia
                           component="img"
                           height="140"
-                          image={pkg?.thumbnail}
+                          image={pkg?.image}
                           alt={pkg?.packageName}
                         />
                       </Box>
