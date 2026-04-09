@@ -80,3 +80,15 @@ export const getPackages = async (isFeatured: boolean = false) => {
 
   return response.data;
 };
+
+export const getCountries = async () => {
+  let url = `${API_BASE_URL_V1}/content/countries`;
+
+  const response = await axios.get(url, {
+    headers: {
+      "x-api-key": API_KEY,
+    },
+  });
+
+  return response.data;
+};

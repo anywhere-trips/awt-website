@@ -9,60 +9,49 @@ import {
   Skeleton,
   Avatar,
   Stack,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
+import { Compass, BadgePercent, Map, ShieldCheck } from "lucide-react";
 import { useUserContext } from "../providers/UserProvider";
 
-import { getPackages } from "../api/api";
-
-interface Package {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  price: string;
-  duration: string;
-}
-
-interface Country {
-  id: number;
-  name: string;
-  image: string;
-}
+import { getPackages, getCountries } from "../api/api";
 
 export const Home: React.FC = () => {
   const { user } = useUserContext();
-  const [packages, setPackages] = useState<Package[]>([]);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
+  const [packages, setPackages] = useState<any[]>([]);
+  const [countries, setCountries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const countries: Country[] = [
-    {
-      id: 1,
-      name: "Bhutan",
-      image: "https://i.ccdn.sk/acm/fdad64ff66eccbc68042139cd33ea31b.webp",
-    },
-    {
-      id: 2,
-      name: "Nepal",
-      image:
-        "https://www.intrepidtravel.com/adventures/wp-content/uploads/2018/10/Little-Tibet.jpg",
-    },
-    {
-      id: 3,
-      name: "Thailand",
-      image:
-        "https://www.travelandleisure.com/thmb/nDDNqO2EctQhiIfZrxeXTF47zhE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/TAL-koh-phi-phi-PLACESTHAILAND1023-09b9d347b3cd4844b4ae19e4e06a9a6d.jpg",
-    },
-    {
-      id: 4,
-      name: "Japan",
-      image:
-        "https://www.swedishnomad.com/wp-content/images/2017/02/Places-to-visit-in-Japan.jpg",
-    },
-  ];
-
-  const getFeaturedPackages = async () => {
+  const loadContent = async () => {
     try {
-      const response = await getPackages(true);
+      let response;
+
+      response = await getCountries();
+
+      if (
+        response?.status &&
+        response.status === "success" &&
+        response?.count &&
+        response.count > 0 &&
+        response?.data &&
+        Array.isArray(response.data) &&
+        response.data.length > 0
+      ) {
+        setCountries(
+          response?.data.map((country: any) => ({
+            _id: country?._id,
+            countryName: country?.country_name,
+            image: country?.image,
+          })),
+        );
+      } else {
+        throw {};
+      }
+
+      response = await getPackages(true);
 
       if (
         response?.status &&
@@ -84,17 +73,19 @@ export const Home: React.FC = () => {
             image: pkg?.image,
           })),
         );
-        setLoading(false);
       } else {
         throw {};
       }
     } catch (error: any) {
       setLoading(true);
+      return;
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
-    getFeaturedPackages();
+    loadContent();
   }, []);
 
   return (
@@ -160,7 +151,7 @@ export const Home: React.FC = () => {
                 >
                   {user?.username
                     ? "Hello " + user?.username
-                    : "Hello. Where to next?"}
+                    : "Where to next?"}
                 </Typography>
 
                 <Typography
@@ -219,61 +210,63 @@ export const Home: React.FC = () => {
               },
             }}
           >
-            {countries.map((country) => (
-              <Box
-                key={country.id}
-                sx={{
-                  flex: "0 0 auto",
-                  width: { xs: 80, sm: "auto" },
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  textAlign: "center",
-                  gap: 0.5,
-                }}
-              >
-                {loading ? (
-                  <Box
-                    sx={{
-                      width: { xs: 80, sm: 90, md: 110 },
-                      height: { xs: 80, sm: 90, md: 110 },
-                    }}
-                  >
-                    <Skeleton variant="circular" width="100%" height="100%" />
-                  </Box>
-                ) : (
-                  <Avatar
-                    src={country.image}
-                    alt={country.name}
-                    sx={{
-                      width: { xs: 80, sm: 90, md: 110 },
-                      height: { xs: 80, sm: 90, md: 110 },
-                    }}
-                  />
-                )}
+            {(loading ? Array.from({ length: 4 }) : countries).map(
+              (country: any, idx) => (
+                <Box
+                  key={country?._id || idx}
+                  sx={{
+                    flex: "0 0 auto",
+                    width: { xs: 80, sm: "auto" },
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    gap: 0.5,
+                  }}
+                >
+                  {loading ? (
+                    <Box
+                      sx={{
+                        width: { xs: 80, sm: 90, md: 110 },
+                        height: { xs: 80, sm: 90, md: 110 },
+                      }}
+                    >
+                      <Skeleton variant="circular" width="100%" height="100%" />
+                    </Box>
+                  ) : (
+                    <Avatar
+                      src={country?.image}
+                      alt={country?.countryName}
+                      sx={{
+                        width: { xs: 80, sm: 90, md: 110 },
+                        height: { xs: 80, sm: 90, md: 110 },
+                      }}
+                    />
+                  )}
 
-                {loading ? (
-                  <Skeleton
-                    variant="text"
-                    sx={{
-                      width: 60,
-                      height: 20,
-                      mt: 0.5,
-                    }}
-                  />
-                ) : (
-                  <Typography
-                    sx={{
-                      mt: 1,
-                      fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
-                      fontWeight: 500,
-                    }}
-                  >
-                    {country.name}
-                  </Typography>
-                )}
-              </Box>
-            ))}
+                  {loading ? (
+                    <Skeleton
+                      variant="text"
+                      sx={{
+                        width: 60,
+                        height: 20,
+                        mt: 0.5,
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      sx={{
+                        mt: 1,
+                        fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
+                        fontWeight: 500,
+                      }}
+                    >
+                      {country?.countryName}
+                    </Typography>
+                  )}
+                </Box>
+              ),
+            )}
           </Box>
         </Box>
 
@@ -392,6 +385,116 @@ export const Home: React.FC = () => {
                 </Box>
               ),
             )}
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 6 }}>
+          <Typography
+            sx={{
+              fontSize: { xs: "1.1rem", md: "1.5rem" },
+              fontWeight: 600,
+              mb: 2,
+            }}
+          >
+            Why Choose Anywhere Trips
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              overflowX: "auto",
+              pb: 1,
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+
+              "@media (min-width:600px)": {
+                display: "grid",
+                overflowX: "unset",
+                gridTemplateColumns: "repeat(2, 1fr)",
+              },
+              "@media (min-width:900px)": {
+                gridTemplateColumns: "repeat(4, 1fr)",
+              },
+            }}
+          >
+            {[
+              {
+                icon: <Compass size={isDesktop ? 25 : 20} color="#1cb690" />,
+                title: "Discover More",
+                desc: "Explore destinations and experiences tailored for every traveler.",
+              },
+              {
+                icon: <BadgePercent size={isDesktop ? 25 : 20} color="#1cb690" />,
+                title: "Best Value Deals",
+                desc: "Get curated packages at great prices without compromising quality.",
+              },
+              {
+                icon: <Map size={isDesktop ? 25 : 20} color="#1cb690" />,
+                title: "Easy Planning",
+                desc: "Plan your trips effortlessly with a smooth and simple experience.",
+              },
+              {
+                icon: <ShieldCheck size={isDesktop ? 25 : 20} color="#1cb690" />,
+                title: "Trusted Experience",
+                desc: "Reliable support to make every journey safe and memorable.",
+              },
+            ].map((item, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  flex: "0 0 auto",
+                  width: { xs: 220, sm: "auto" },
+                  p: 2,
+                  borderRadius: "15px",
+                  backgroundColor: "#fff",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    backgroundColor: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.icon}
+                </Box>
+
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: {
+                      xs: "0.95rem",
+                      sm: "1rem",
+                      md: "1.1rem",
+                    },
+                    color: "#1d1d1d",
+                  }}
+                >
+                  {item.title}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "0.85rem",
+                      md: "0.9rem",
+                    },
+                    color: "text.secondary",
+                  }}
+                >
+                  {item.desc}
+                </Typography>
+              </Box>
+            ))}
           </Box>
         </Box>
       </Container>
