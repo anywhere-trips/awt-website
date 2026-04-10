@@ -22,6 +22,7 @@ import {
   getUserProfile,
   uploadProfilePicture,
   removeProfilePicture,
+  getWishlist,
 } from "../api/api";
 
 export const Profile: React.FC = () => {
@@ -61,6 +62,9 @@ export const Profile: React.FC = () => {
 
   const [saving, setSaving] = useState(false);
 
+  const [wishlistPackages, setWishlistPackages] = useState<any[]>([]);
+  const [wishlistLoading, setWishlistLoading] = useState(true);
+
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) return;
@@ -79,6 +83,33 @@ export const Profile: React.FC = () => {
       }
     };
     fetchProfile();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (!token) return;
+
+      try {
+        setWishlistLoading(true);
+        const res = await getWishlist(token);
+
+        if (res?.status === "success" && Array.isArray(res?.data)) {
+          setWishlistPackages(
+            res.data.map((pkg: any) => ({
+              _id: pkg._id,
+              packageName: pkg.package_name,
+              image: pkg.image,
+            })),
+          );
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setWishlistLoading(false);
+      }
+    };
+
+    fetchWishlist();
   }, [token]);
 
   const validateName = (value: string, field: string, required = true) => {
@@ -522,6 +553,122 @@ export const Profile: React.FC = () => {
             )}
           </Button>
         </Stack>
+      </Box>
+
+      <Box sx={{ my: 5 }}>
+        <Typography
+          sx={{
+            fontWeight: 600,
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
+            mb: 2,
+          }}
+        >
+          Your Wishlist
+        </Typography>
+
+        {wishlistLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              overflowX: "auto",
+              pb: 1,
+            }}
+          >
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <Skeleton
+                key={idx}
+                variant="rectangular"
+                width={150}
+                height={140}
+                sx={{ borderRadius: 3, flex: "0 0 auto" }}
+              />
+            ))}
+          </Box>
+        ) : wishlistPackages.length === 0 ? (
+          <Box
+            sx={{
+              p: 3,
+              py: 5,
+              borderRadius: 5,
+              backgroundColor: "#fff",
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: "0.9rem", sm: "1rem", md: "1.05rem" },
+                fontWeight: 600,
+                color: "#1d1d1d",
+                mb: 1,
+              }}
+            >
+              Your wishlist feels a little empty
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: "0.8rem", sm: "0.9rem" },
+                color: "text.secondary",
+              }}
+            >
+              Start adding dreamy destinations and build your next adventure
+            </Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              overflowX: "auto",
+              pb: 1,
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            {wishlistPackages.map((pkg: any) => (
+              <Box
+                key={pkg._id}
+                sx={{
+                  flex: "0 0 auto",
+                  width: { xs: 140, sm: 160, md: 180 },
+                }}
+              >
+                <Box
+                  sx={{
+                    borderRadius: 3,
+                    overflow: "hidden",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={pkg.image}
+                    alt={pkg.packageName}
+                    sx={{
+                      width: "100%",
+                      height: 110,
+                      objectFit: "cover",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      p: 1,
+                      fontSize: { xs: "0.8rem", sm: "0.85rem" },
+                      fontWeight: 500,
+                      color: "#1d1d1d",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {pkg.packageName}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        )}
       </Box>
     </Container>
   );
