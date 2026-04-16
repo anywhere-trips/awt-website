@@ -249,7 +249,7 @@ export const Home: React.FC = () => {
             )}
           </Box>
 
-          <Box sx={{ mt: 5 }}>
+          <Box sx={{ mt: { xs: 2.5, md: 5 } }}>
             {loading ? (
               <Skeleton
                 variant="text"
@@ -355,7 +355,7 @@ export const Home: React.FC = () => {
             </Box>
           </Box>
 
-          <Box sx={{ mt: 5 }}>
+          <Box sx={{ mt: { xs: 2.5, md: 5 } }}>
             {loading ? (
               <Skeleton
                 variant="text"
@@ -417,7 +417,7 @@ export const Home: React.FC = () => {
                         >
                           <CardMedia
                             component="img"
-                            height="140"
+                            height="175"
                             image={pkg?.image}
                             alt={pkg?.packageName}
                           />
@@ -458,7 +458,7 @@ export const Home: React.FC = () => {
                           >
                             {pkg?.packageName}
                           </Typography>
-                          <Typography
+                          {/* <Typography
                             sx={{
                               fontSize: {
                                 xs: "0.8rem",
@@ -475,7 +475,7 @@ export const Home: React.FC = () => {
                             }}
                           >
                             {pkg?.shortDescription}
-                          </Typography>
+                          </Typography> */}
                           <Box
                             sx={{
                               display: "flex",
